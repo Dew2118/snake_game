@@ -1,9 +1,10 @@
-from cords import Cords
-from display import display_obj
+import sys
+if 'pytest' not in sys.modules:
+    from src.display import display_obj
 from time import sleep
-
+from src.cords import Cords
 class Snake:
-    def __init__(self, fruit,wall) -> None:
+    def __init__(self, fruit, wall) -> None:
         self.current_positions = []
         self.lenght = 3
         self.last = 'RIGHT'
@@ -13,6 +14,8 @@ class Snake:
 
     def create(self, starting_cords):
         self.current_positions.append(starting_cords)
+
+    
 
     def run(self):
         arrow = display_obj.get_arrow()
@@ -55,18 +58,22 @@ class Snake:
             elif self.orientation == 'right':
                 self.current_positions.append(Cords(self.current_positions[-1].x, self.current_positions[-1].y-1))
                 self.orientation = 'up'
+        if 'pytest' not in sys.modules:
+            if self.wall.check_in_wall(self.current_positions[-1]) or self.check_is_in():
+                return 'a' 
+            self.is_hit_fruit()
+            self.display_snake()
+            sleep(0.2)
 
-        if self.wall.check_in_wall(self.current_positions[-1]):
-            return 'a' 
+    def is_hit_fruit(self):
         if self.fruit.is_hit(self.current_positions[-1]):
             self.lenght += 1
+
+    def display_snake(self):
         if self.lenght < len(self.current_positions):
             display_obj.display_char(' ', self.current_positions.pop(0))
         display_obj.display_char('A', self.current_positions[-1])
-        if self.check_is_in():
-            return 'a'
-        sleep(0.2)
-
+        
     def check_is_in(self):
         if self.current_positions[-1] in self.current_positions[:-1]:
             return True

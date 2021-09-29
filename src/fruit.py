@@ -1,14 +1,16 @@
-from cords import Cords
 from random import randint
-from display import display_obj
+import sys
+if 'pytest' not in sys.modules:
+    from src.display import display_obj
+from src.cords import Cords
 class Fruit:
     def __init__(self, wall) -> None:
         self.fruit_position =  None
         self.wall = wall
         
     def create(self):
-        x = randint(0,self.wall.y2-1)
-        y = randint(0,self.wall.x2-1)
+        x = randint(0,self.wall.x2-1)
+        y = randint(0,self.wall.y2-1)
         if self.fruit_position is not None:
             display_obj.display_char(' ',self.fruit_position)
         self.fruit_position = Cords(x,y)

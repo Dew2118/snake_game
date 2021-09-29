@@ -1,5 +1,6 @@
 from curses import wrapper
 import curses
+import sys
 class Display:
     def __init__(self,stdscr) -> None:
         self.stdscr = stdscr
@@ -9,8 +10,11 @@ class Display:
         curses.curs_set(0)
 
     def display_char(self, char, cords):
-        self.stdscr.addstr(cords.y, cords.x, char)
-        self.stdscr.refresh()
+        try:
+            self.stdscr.addstr(cords.y, cords.x, char)
+            self.stdscr.refresh()
+        except Exception:
+            return
 
     def get_arrow(self):
         self.stdscr.keypad(True)
@@ -23,5 +27,5 @@ class Display:
             return 'RIGHT'
         elif char == curses.KEY_LEFT: 
             return 'LEFT'
-        
-display_obj = wrapper(Display)
+if 'pytest' not in sys.modules:
+    display_obj = wrapper(Display)
