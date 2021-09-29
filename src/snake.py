@@ -5,33 +5,57 @@ from time import sleep
 class Snake:
     def __init__(self, fruit,wall) -> None:
         self.current_positions = []
-        self.lenght = 1
+        self.lenght = 3
         self.last = 'RIGHT'
         self.fruit = fruit
         self.wall = wall
+        self.orientation = 'right'
 
     def create(self, starting_cords):
         self.current_positions.append(starting_cords)
 
     def run(self):
-        opposite = {'RIGHT':'LEFT','LEFT':'RIGHT', 'UP':'DOWN','DOWN':'UP'}
         arrow = display_obj.get_arrow()
-        if arrow == 'none' or arrow == opposite[self.last]:
-            arrow = self.last
+        if arrow == 'none':
+            if self.orientation == 'up':
+                self.current_positions.append(Cords(self.current_positions[-1].x, self.current_positions[-1].y-1))
+            elif self.orientation == 'right':
+                self.current_positions.append(Cords(self.current_positions[-1].x+1, self.current_positions[-1].y))
+            elif self.orientation == 'down':
+                self.current_positions.append(Cords(self.current_positions[-1].x, self.current_positions[-1].y+1))
+            elif self.orientation == 'left':
+                self.current_positions.append(Cords(self.current_positions[-1].x-1, self.current_positions[-1].y))
         if arrow == 'end':
             return 'a'
         if arrow == 'RIGHT':
             self.last = 'RIGHT'
-            self.current_positions.append(Cords(self.current_positions[-1].x+1, self.current_positions[-1].y))
+            if self.orientation == 'up':
+                self.current_positions.append(Cords(self.current_positions[-1].x+1, self.current_positions[-1].y))
+                self.orientation = 'right'
+            elif self.orientation == 'right':
+                self.current_positions.append(Cords(self.current_positions[-1].x, self.current_positions[-1].y+1))
+                self.orientation = 'down'
+            elif self.orientation == 'down':
+                self.current_positions.append(Cords(self.current_positions[-1].x-1, self.current_positions[-1].y))
+                self.orientation = 'left'
+            elif self.orientation == 'left':
+                self.current_positions.append(Cords(self.current_positions[-1].x, self.current_positions[-1].y-1))
+                self.orientation = 'up'
         elif arrow == 'LEFT':
             self.last = 'LEFT'
-            self.current_positions.append(Cords(self.current_positions[-1].x-1, self.current_positions[-1].y))
-        elif arrow == 'UP':
-            self.last = 'UP'
-            self.current_positions.append(Cords(self.current_positions[-1].x, self.current_positions[-1].y-1))
-        elif arrow == 'DOWN':
-            self.last = 'DOWN'
-            self.current_positions.append(Cords(self.current_positions[-1].x, self.current_positions[-1].y+1))
+            if self.orientation == 'up':
+                self.current_positions.append(Cords(self.current_positions[-1].x-1, self.current_positions[-1].y))
+                self.orientation = 'left'
+            elif self.orientation == 'left':
+                self.current_positions.append(Cords(self.current_positions[-1].x, self.current_positions[-1].y+1))
+                self.orientation = 'down'
+            elif self.orientation == 'down':
+                self.current_positions.append(Cords(self.current_positions[-1].x+1, self.current_positions[-1].y))
+                self.orientation = 'right'
+            elif self.orientation == 'right':
+                self.current_positions.append(Cords(self.current_positions[-1].x, self.current_positions[-1].y-1))
+                self.orientation = 'up'
+
         if self.wall.check_in_wall(self.current_positions[-1]):
             return 'a' 
         if self.fruit.is_hit(self.current_positions[-1]):

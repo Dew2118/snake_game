@@ -23,9 +23,5 @@ class Display:
             return 'RIGHT'
         elif char == curses.KEY_LEFT: 
             return 'LEFT'
-        elif char == curses.KEY_UP: 
-            return 'UP'
-        elif char == curses.KEY_DOWN: 
-            return 'DOWN'
         
 display_obj = wrapper(Display)
